@@ -1,0 +1,60 @@
+PL-KRK-FEFW01 # show firewall policy
+config firewall policy
+    edit 1
+        set uuid 38ba1c76-7735-4e1d-b32b-0acab3ab95b8
+        set srcintf "any"
+        set dstintf "any"
+        set srcaddr "hst-192.168.15.5-bad" "hst-192.168.15.40"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+        set comments "Block traffic from RA to RB"
+    next
+    edit 2
+        set uuid 702f699f-5055-434d-adef-542204d5bb64
+        set srcintf "FE-WAN"
+        set dstintf "DMZ"
+        set srcaddr "grp-block-outside"
+        set dstaddr "PREM-172.16.100.1-172.16.100.152"
+        set schedule "always"
+        set service "HTTP" "HTTPS"
+        set logtraffic all
+        set comments "Requested 16.03.2022"
+    next
+    edit 3
+        set uuid e9b69443-ce68-45c7-8ab8-6581a10224fd
+        set srcintf "BE-WAN"
+        set dstintf "BE-LAN"
+        set srcaddr "grp-vulnerables"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+        set comments "Security change TKT0012558742"
+	set nat enable
+    next
+    edit 4
+        set uuid f0c6ff77-e451-41a8-a221-6e5cf1a9ab40
+        set srcintf "any"
+        set dstintf "FE-WAN"
+        set srcaddr "all"
+        set dstaddr "grp-in-vuln"
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+        set comments "Security change TKT0012556637"
+    next
+    edit 5
+        set uuid 52c29473-7a46-4832-a858-b873d848de64
+        set srcintf "any"
+        set dstintf "any"
+        set srcaddr "grp-remote-cust"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+        set comments "RDP inside do cust"
+	set nat enable
+    next
+end
