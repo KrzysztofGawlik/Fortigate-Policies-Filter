@@ -3,6 +3,8 @@
 #include <algorithm> 
 #include <cctype>
 #include <locale>
+#include <chrono>
+#include <string>
 using namespace std;
 
 // trim from start (in place)
@@ -69,8 +71,22 @@ int main(void){
                             "set schedule ",
                             "set service ",
                             "set logtraffic ",
-                            "set nat "};
-    int lfElem = sizeof(lookingFor)/sizeof(lookingFor[0]);
+                            "set nat ",
+                            // new properties added (comments excluded)
+                            "set name ",
+                            "set uuid ",
+                            "set capture-packet ",
+                            "set auto-asic-offload ",
+                            "set utm-status ",
+                            "set ssl-ssh-profile ",
+                            "set ips-sensor ",
+                            "set status ",
+                            "set internet-service ",
+                            "set ippool ",
+                            "set poolname ",
+                            "set tcp-mss-sender ",
+                            "set tcp-mss-receiver "};
+    const int lfElem = sizeof(lookingFor)/sizeof(lookingFor[0]);
     string ruleProperties[lfElem];
     fstream file, csv;
     int foundAt;
@@ -90,6 +106,7 @@ int main(void){
     }
     cout << "Press any key to start analysis..." << endl;
     cin.sync(); cin.get();
+    auto start = chrono::high_resolution_clock::now();
     csv.open("converted.csv", fstream::out);
 
     // Add column names
@@ -118,10 +135,11 @@ int main(void){
             csv << endl;
         }
     }
-
+    auto stop = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::milliseconds>(stop-start);
     cout << "Closing files..." << endl;
     file.close();
     csv.close();
-    cout << "Converting complete!\nPress any key to quit..." << endl;
+    printf("Converting complete (%d ms)!\n Press any key to quit...", duration);
     cin.sync(); cin.get();
 }
