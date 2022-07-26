@@ -50,14 +50,16 @@ void greeting(void){
     cout << "Hello! Thank you for using this little program :)" << endl;
     cout << "It converts \'show firewall policy\' output from FortiGate firewall CLI to CSV file." << endl;
     cout << "Please put the .exe & output in .txt in the same directory. Run the app, when asked" << endl;
-    cout << "for filename, provide it with extension, eg. fw_output.txt ." << endl;
+    cout << "for filename, provide it without extension, eg. fw_output ." << endl;
     cout << "CSV file will be created for you!" << endl;
     cout << string(85, '*') << endl;
     cout << "Made by Krzysztof Gawlik -- 06/2022" << endl;
-    cout << "Version 1.0.0 - not official" << endl;
+    cout << "Version 1.1.0 (beta) - not official" << endl;
     cout << "!!! USE AT YOUR OWN RISK !!!" << endl;
     cout << string(85, '*') << endl;
 }
+
+
 
 int main(void){
 
@@ -90,13 +92,14 @@ int main(void){
     string ruleProperties[lfElem];
     fstream file, csv;
     int foundAt;
-    string filename;
+    string filename, in_file, out_file;
     
     greeting();
     cout << "Provide filename with \"show firewall policy\" output: ";
     cin >> filename;
-    cout << "Trying to open \""<<filename<<"\"..." << endl;
-    file.open(filename, fstream::in);
+    cout << "Trying to open \""<<filename<<".txt\"..." << endl;
+    in_file = filename + ".txt";
+    file.open(in_file, fstream::in);
     if(file.is_open()){
         cout << "File opened successfully!" << endl;    
     } else {
@@ -107,7 +110,8 @@ int main(void){
     cout << "Press any key to start analysis..." << endl;
     cin.sync(); cin.get();
     auto start = chrono::high_resolution_clock::now();
-    csv.open("converted.csv", fstream::out);
+    out_file = filename + ".csv";
+    csv.open(out_file, fstream::out);
 
     // Add column names
     for(string s : lookingFor){
