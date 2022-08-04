@@ -82,6 +82,7 @@ int main(void){
 
     string line, sample;
     const int lfElem = sizeof(show_firewall_policy)/sizeof(show_firewall_policy[0]);
+    const int lfElemRest = sizeof(show_firewall_rest)/sizeof(show_firewall_rest[0]);
     string ruleProperties[lfElem];
     fstream file, csv;
     int foundAt;
