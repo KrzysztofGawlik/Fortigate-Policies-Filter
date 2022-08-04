@@ -88,6 +88,7 @@ int main(void){
     int foundAt;
     string filename, in_file, out_file;
     
+    // Welcome screen and open file, create output file, confirm and start clock
     greeting();
     cout << "Provide filename with \"show firewall policy\" output: ";
     cin >> filename;
@@ -113,18 +114,26 @@ int main(void){
     }
     csv << endl;
 
+    // Read line by line
     while(getline(file, line)){
 
+        // Check for each property
         for(int i = 0; i < lfElem; i++){
             foundAt = -1;
             foundAt = line.find(show_firewall_policy[i]);
+
+            // Found property
             if(foundAt != -1){
                 sample = line.substr(foundAt+show_firewall_policy[i].length());
                 ruleProperties[i] = sample; break;
             }
         }
+
+        // Check for the "next" keyword
         sample = trim_copy(line);
         if(sample == "next"){
+
+            // If found "next" save whole rule to a file
             cout << "Saving properties for rule: " << ruleProperties[0] << endl;
             for(int i = 0; i < lfElem; i++){
                 csv << ruleProperties[i] << ",";
@@ -133,6 +142,8 @@ int main(void){
             csv << endl;
         }
     }
+
+    // End of analysis - stop clock, print duration, close files
     auto stop = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::milliseconds>(stop-start);
     cout << "Closing files..." << endl;
