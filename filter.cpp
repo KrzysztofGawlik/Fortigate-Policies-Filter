@@ -89,13 +89,15 @@ int main(void){
     string filename, in_file, out_file;
 
     // Flags
-    bool policies = false; // config firewall policy
-    bool address_groups = false; // config firewall addrgrp
-    bool ipv6_address_groups = false; // config firewall addrgrp6
-    bool vip_groups = false; // config firewall vipgrp
-    bool ipv6_vip_groups = false; // config firewall vipgrp6
-    bool service_groups = false; // config firewall service group
-    bool schedule_groups = false; // config firewall schedule group
+    enum currentLookup { 
+        POLICIES,               // config firewall policy
+        ADDR_GROUPS,            // config firewall addrgrp
+        IPV6_ADDR_GROUPS,       // config firewall addrgrp6
+        VIP_GROUPS,             // config firewall vipgrp
+        IPV6_VIP_GROUPS,        // config firewall vipgrp6
+        SERVICE_GROUPS,         // config firewall service group
+        SCHEDULE_GROUPS         // config firewall schedule group
+    };
     
     // Welcome screen and open file, create output file, confirm and start clock
     greeting();
