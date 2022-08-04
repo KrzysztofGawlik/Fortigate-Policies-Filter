@@ -64,7 +64,8 @@ void greeting(void){
 int main(void){
 
     string line, sample;
-    string lookingFor[] = {"edit ",             // ID
+
+    string show_firewall_policy[] = {"edit ",             // ID
                             "set name ",        // Name
                             "set action ",      // Action
                             "set srcintf ",     // From
@@ -75,7 +76,8 @@ int main(void){
                             "set service ",     // Service
                             "set logtraffic ",  // Log
                             "set nat "};        // NAT
-    const int lfElem = sizeof(lookingFor)/sizeof(lookingFor[0]);
+
+    const int lfElem = sizeof(show_firewall_policy)/sizeof(show_firewall_policy[0]);
     string ruleProperties[lfElem];
     fstream file, csv;
     int foundAt;
@@ -101,7 +103,7 @@ int main(void){
     csv.open(out_file, fstream::out);
 
     // Add column names
-    for(string s : lookingFor){
+    for(string s : show_firewall_policy){
         csv << s << ",";
     }
     csv << endl;
@@ -110,9 +112,9 @@ int main(void){
 
         for(int i = 0; i < lfElem; i++){
             foundAt = -1;
-            foundAt = line.find(lookingFor[i]);
+            foundAt = line.find(show_firewall_policy[i]);
             if(foundAt != -1){
-                sample = line.substr(foundAt+lookingFor[i].length());
+                sample = line.substr(foundAt+show_firewall_policy[i].length());
                 ruleProperties[i] = sample; break;
             }
         }
