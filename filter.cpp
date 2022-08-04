@@ -63,8 +63,6 @@ void greeting(void){
 
 int main(void){
 
-    string line, sample;
-
     // It applies only to command: show firewall policy
     string show_firewall_policy[] = {"edit ",   // ID
                             "set name ",        // Name
@@ -82,11 +80,21 @@ int main(void){
     string show_firewall_rest[] = {"edit",      // Name
                             "set member "};     // Details
 
+    string line, sample;
     const int lfElem = sizeof(show_firewall_policy)/sizeof(show_firewall_policy[0]);
     string ruleProperties[lfElem];
     fstream file, csv;
     int foundAt;
     string filename, in_file, out_file;
+
+    // Flags
+    bool policies = false;
+    bool address_groups = false;
+    bool ipv6_address_groups = false;
+    bool vip_groups = false;
+    bool ipv6_vip_groups = false;
+    bool service_groups = false;
+    bool schedule_groups = false;
     
     // Welcome screen and open file, create output file, confirm and start clock
     greeting();
