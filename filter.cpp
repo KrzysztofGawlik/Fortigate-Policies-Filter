@@ -48,13 +48,13 @@ static inline std::string trim_copy(std::string s) {
 void greeting(void){
     cout << string(85, '*') << endl;
     cout << "Hello! Thank you for using this little program :)" << endl;
-    cout << "It converts \'show firewall policy\' output from FortiGate firewall CLI to CSV file." << endl;
+    cout << "It converts \'show firewall [...]\' output from FortiGate firewall CLI to CSV file." << endl;
     cout << "Please put the .exe & output in .txt in the same directory. Run the app, when asked" << endl;
     cout << "for filename, provide it without extension, eg. fw_output ." << endl;
     cout << "CSV file will be created for you!" << endl;
     cout << string(85, '*') << endl;
-    cout << "Made by Krzysztof Gawlik -- 06/2022" << endl;
-    cout << "Version 1.1.0 (beta) - not official" << endl;
+    cout << "Made by Krzysztof Gawlik -- 08/2022" << endl;
+    cout << "Version 2.0.0 (beta) - not official" << endl;
     cout << "!!! USE AT YOUR OWN RISK !!!" << endl;
     cout << string(85, '*') << endl;
 }
@@ -64,30 +64,17 @@ void greeting(void){
 int main(void){
 
     string line, sample;
-    string lookingFor[] = {"edit ", 
-                            "set srcintf ",
-                            "set dstintf ",
-                            "set srcaddr ",
-                            "set dstaddr ",
-                            "set action ",
-                            "set schedule ",
-                            "set service ",
-                            "set logtraffic ",
-                            "set nat ",
-                            // new properties added (comments excluded)
-                            "set name ",
-                            "set uuid ",
-                            "set capture-packet ",
-                            "set auto-asic-offload ",
-                            "set utm-status ",
-                            "set ssl-ssh-profile ",
-                            "set ips-sensor ",
-                            "set status ",
-                            "set internet-service ",
-                            "set ippool ",
-                            "set poolname ",
-                            "set tcp-mss-sender ",
-                            "set tcp-mss-receiver "};
+    string lookingFor[] = {"edit ",             // ID
+                            "set name ",        // Name
+                            "set action ",      // Action
+                            "set srcintf ",     // From
+                            "set srcaddr ",     // Source
+                            "set dstintf ",     // To
+                            "set dstaddr ",     // Destination
+                            "set schedule ",    // Schedule    
+                            "set service ",     // Service
+                            "set logtraffic ",  // Log
+                            "set nat "};        // NAT
     const int lfElem = sizeof(lookingFor)/sizeof(lookingFor[0]);
     string ruleProperties[lfElem];
     fstream file, csv;
