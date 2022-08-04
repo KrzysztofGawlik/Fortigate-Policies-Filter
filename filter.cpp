@@ -65,7 +65,8 @@ int main(void){
 
     string line, sample;
 
-    string show_firewall_policy[] = {"edit ",             // ID
+    // It applies only to command: show firewall policy
+    string show_firewall_policy[] = {"edit ",   // ID
                             "set name ",        // Name
                             "set action ",      // Action
                             "set srcintf ",     // From
@@ -76,6 +77,10 @@ int main(void){
                             "set service ",     // Service
                             "set logtraffic ",  // Log
                             "set nat "};        // NAT
+
+    // It applies to commands: show firewall addrgrp / addrgrp6/ vipgrp / vipgrp6 / service group / schedule group
+    string show_firewall_rest[] = {"edit",      // Name
+                            "set member "};     // Details
 
     const int lfElem = sizeof(show_firewall_policy)/sizeof(show_firewall_policy[0]);
     string ruleProperties[lfElem];
