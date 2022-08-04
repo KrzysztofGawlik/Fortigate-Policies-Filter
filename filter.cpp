@@ -59,7 +59,17 @@ void greeting(void){
     cout << string(85, '*') << endl;
 }
 
-
+// Flags
+enum currentLookup { 
+    POLICIES,               // config firewall policy
+    ADDR_GROUPS,            // config firewall addrgrp
+    IPV6_ADDR_GROUPS,       // config firewall addrgrp6
+    VIP_GROUPS,             // config firewall vipgrp
+    IPV6_VIP_GROUPS,        // config firewall vipgrp6
+    SERVICE_GROUPS,         // config firewall service group
+    SCHEDULE_GROUPS,        // config firewall schedule group
+    OUTSIDE                 // when none of the above
+};
 
 int main(void){
 
@@ -87,17 +97,6 @@ int main(void){
     fstream file, csv;
     int foundAt;
     string filename, in_file, out_file;
-
-    // Flags
-    enum currentLookup { 
-        POLICIES,               // config firewall policy
-        ADDR_GROUPS,            // config firewall addrgrp
-        IPV6_ADDR_GROUPS,       // config firewall addrgrp6
-        VIP_GROUPS,             // config firewall vipgrp
-        IPV6_VIP_GROUPS,        // config firewall vipgrp6
-        SERVICE_GROUPS,         // config firewall service group
-        SCHEDULE_GROUPS         // config firewall schedule group
-    };
     
     // Welcome screen and open file, create output file, confirm and start clock
     greeting();
@@ -124,6 +123,8 @@ int main(void){
         csv << s << ",";
     }
     csv << endl;
+
+    currentLookup CL = OUTSIDE;
 
     // Read line by line
     while(getline(file, line)){
