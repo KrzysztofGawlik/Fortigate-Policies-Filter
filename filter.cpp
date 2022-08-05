@@ -128,6 +128,40 @@ int main(void){
 
     // Read line by line
     while(getline(file, line)){
+        trim(line);
+
+        // Check what is current mode or skip if none
+        if (CL == OUTSIDE){
+            if(line.find("config firewall policy") == 0){
+                CL = POLICIES;
+                continue;
+            }
+            if(line.find("config firewall addrgrp6") == 0){
+                CL = IPV6_ADDR_GROUPS;
+                continue;
+            }
+            if(line.find("config firewall addrgrp") == 0){
+                CL = ADDR_GROUPS;
+                continue;
+            }
+            if(line.find("config firewall vipgrp6") == 0){
+                CL = IPV6_VIP_GROUPS;
+                continue;
+            }
+            if(line.find("config firewall vipgrp") == 0){
+                CL = VIP_GROUPS;
+                continue;
+            }
+            if(line.find("config firewall service group") == 0){
+                CL = SERVICE_GROUPS;
+                continue;
+            }
+            if(line.find("config firewall schedule group") == 0){
+                CL = SCHEDULE_GROUPS;
+                continue;
+            }
+            continue;
+        }
 
         // Check for each property
         for(int i = 0; i < lfElem; i++){
