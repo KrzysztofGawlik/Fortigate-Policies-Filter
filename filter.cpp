@@ -71,6 +71,13 @@ enum currentLookup {
     OUTSIDE                 // when none of the above
 };
 
+bool checkForExactMatch(string line, string confType){
+    if(line == confType){
+        return true;
+    }
+    return false;
+}
+
 int main(void){
 
     // It applies only to command: show firewall policy
@@ -126,73 +133,52 @@ int main(void){
 
     currentLookup CL = OUTSIDE;
 
+    bool configurationMode = false;
+    bool editMode = false;
+
     // Read line by line
-    while(getline(file, line)){
+    while(!file.eof()){
+        getline(file, line);
         trim(line);
 
-        // Check what is current mode or skip if none
-        if (CL == OUTSIDE){
-            if(line.find("config firewall policy") == 0){
-                CL = POLICIES;
-                continue;
+        if(!configurationMode){
+            if(checkForExactMatch(line, "config firewall policy")) CL = POLICIES;
+            else if(checkForExactMatch(line, "config firewall addrgrp")) CL = ADDR_GROUPS;
+
+            if(CL != OUTSIDE){
+                configurationMode = true; continue;
             }
-            if(line.find("config firewall addrgrp6") == 0){
-                CL = IPV6_ADDR_GROUPS;
-                continue;
-            }
-            if(line.find("config firewall addrgrp") == 0){
-                CL = ADDR_GROUPS;
-                continue;
-            }
-            if(line.find("config firewall vipgrp6") == 0){
-                CL = IPV6_VIP_GROUPS;
-                continue;
-            }
-            if(line.find("config firewall vipgrp") == 0){
-                CL = VIP_GROUPS;
-                continue;
-            }
-            if(line.find("config firewall service group") == 0){
-                CL = SERVICE_GROUPS;
-                continue;
-            }
-            if(line.find("config firewall schedule group") == 0){
-                CL = SCHEDULE_GROUPS;
-                continue;
-            }
-            continue;
         }
 
-        int propertyIndicator;
-        if(CL == POLICIES){
-            // Check for each property for policy
-            for(int i = 0; i < lfElem; i++){
-                foundAt = -1;
-                foundAt = line.find(show_firewall_policy[i]);
+        if(configurationMode){
+            if(checkForExactMatch(line, "end")){
+                CL = OUTSIDE; configurationMode = false; continue;
+            }
 
-                // Found property
-                if(foundAt == 0){
-                    propertyIndicator = i;
-                    sample = line.substr(foundAt+show_firewall_policy[i].length());
-                    ruleProperties[i] = sample; break;
-                } else if (line == "next") {
-                    // If found "next" save whole rule to a file
-                    cout << "Saving properties for rule: " << ruleProperties[0] << endl;
-                    for(int i = 0; i < lfElem; i++){
-                        csv << ruleProperties[i] << ",";
-                        ruleProperties[i] = "";
-                    }
-                    csv << endl;
-                    break;
-                } else if (line == "end") {
-                    // If found "end" exit policies mode
-                    CL = OUTSIDE;
-                    break;
-                } else if (line.substr(0,3) != "set") {
-                    ruleProperties[propertyIndicator] += line;
+            if(checkForExactMatch(line.substr(0,4), "edit")){
+                editMode = true; continue;
+            }
+            if(editMode){
+                if(checkForExactMatch(line, "next")){
+                    editMode = false; continue;
                 }
+
+                // Place for processing properties
+                switch(CL){
+                    case POLICIES: {
+                        for(int i = 0; i < lfElem; i++){
+                            if(line.find(show_firewall_policy[i]) == 0){
+                                ruleProperties[i] = line.substr(show_firewall_policy[i].length());
+                                break;
+                            }
+                        }
+                        continue;
+                    }
+                }
+
             }
         }
+
     }
 
     // End of analysis - stop clock, print duration, close files
