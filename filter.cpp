@@ -163,29 +163,35 @@ int main(void){
             continue;
         }
 
-        // Check for each property
-        for(int i = 0; i < lfElem; i++){
-            foundAt = -1;
-            foundAt = line.find(show_firewall_policy[i]);
-
-            // Found property
-            if(foundAt != -1){
-                sample = line.substr(foundAt+show_firewall_policy[i].length());
-                ruleProperties[i] = sample; break;
-            }
-        }
-
-        // Check for the "next" keyword
-        sample = trim_copy(line);
-        if(sample == "next"){
-
-            // If found "next" save whole rule to a file
-            cout << "Saving properties for rule: " << ruleProperties[0] << endl;
+        int propertyIndicator;
+        if(CL == POLICIES){
+            // Check for each property for policy
             for(int i = 0; i < lfElem; i++){
-                csv << ruleProperties[i] << ",";
-                ruleProperties[i] = "";
+                foundAt = -1;
+                foundAt = line.find(show_firewall_policy[i]);
+
+                // Found property
+                if(foundAt == 0){
+                    propertyIndicator = i;
+                    sample = line.substr(foundAt+show_firewall_policy[i].length());
+                    ruleProperties[i] = sample; break;
+                } else if (line == "next") {
+                    // If found "next" save whole rule to a file
+                    cout << "Saving properties for rule: " << ruleProperties[0] << endl;
+                    for(int i = 0; i < lfElem; i++){
+                        csv << ruleProperties[i] << ",";
+                        ruleProperties[i] = "";
+                    }
+                    csv << endl;
+                    break;
+                } else if (line == "end") {
+                    // If found "end" exit policies mode
+                    CL = OUTSIDE;
+                    break;
+                } else if (line.substr(0,3) != "set") {
+                    ruleProperties[propertyIndicator] += line;
+                }
             }
-            csv << endl;
         }
     }
 
