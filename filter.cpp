@@ -160,6 +160,14 @@ int main(void){
             }
             if(editMode){
                 if(checkForExactMatch(line, "next")){
+
+                    cout << "Saving properties for object: " << ruleProperties[0] << endl;
+                    for(int i = 0; i < lfElem; i++){
+                        csv << ruleProperties[i] << ",";
+                        ruleProperties[i] = "";
+                    }
+                    csv << endl;
+
                     editMode = false; continue;
                 }
 
