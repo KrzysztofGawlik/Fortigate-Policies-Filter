@@ -94,7 +94,7 @@ int main(void){
                             "set nat "};        // NAT
 
     // It applies to commands: show firewall addrgrp / addrgrp6/ vipgrp / vipgrp6 / service group / schedule group
-    string show_firewall_rest[] = {"edit",      // Name
+    string show_firewall_rest[] = {"edit ",      // Name
                             "set member "};     // Details
 
     string line, sample;
