@@ -71,6 +71,26 @@ enum currentLookup {
     OUTSIDE                 // when none of the above
 };
 
+class Policy{
+    public:
+        unsigned int id;
+        string  name,
+                action,
+                srcInterface,
+                srcAddress,
+                dstInterface,
+                dstAddress,
+                schedule,
+                service,
+                logTraffic,
+                nat;
+};
+
+class Group{
+    public:
+        string name, details;
+};
+
 bool checkForExactMatch(string line, string confType){
     if(line == confType){
         return true;
@@ -161,7 +181,7 @@ int main(void){
             }
 
             if(checkForExactMatch(line.substr(0,4), "edit")){
-                editMode = true; continue;
+                editMode = true; continue; // Continue causes to avoid taking rule number
             }
             if(editMode){
                 if(checkForExactMatch(line, "next")){
