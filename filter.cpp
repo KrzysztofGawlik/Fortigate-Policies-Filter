@@ -143,7 +143,12 @@ int main(void){
 
         if(!configurationMode){
             if(checkForExactMatch(line, "config firewall policy")) CL = POLICIES;
+            else if(checkForExactMatch(line, "config firewall addrgrp6")) CL = IPV6_ADDR_GROUPS;
             else if(checkForExactMatch(line, "config firewall addrgrp")) CL = ADDR_GROUPS;
+            else if(checkForExactMatch(line, "config firewall vipgrp6")) CL = IPV6_VIP_GROUPS;
+            else if(checkForExactMatch(line, "config firewall vipgrp")) CL = VIP_GROUPS;
+            else if(checkForExactMatch(line, "config firewall service group")) CL = SERVICE_GROUPS;
+            else if(checkForExactMatch(line, "config firewall schedule group")) CL = SCHEDULE_GROUPS;
 
             if(CL != OUTSIDE){
                 configurationMode = true; continue;
@@ -172,6 +177,9 @@ int main(void){
                 }
 
                 // Place for processing properties
+                /*
+                    There is no code for processing multilines - needs to be added
+                */
                 switch(CL){
                     case POLICIES: {
                         for(int i = 0; i < lfElem; i++){
