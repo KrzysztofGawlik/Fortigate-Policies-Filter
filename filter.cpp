@@ -143,20 +143,13 @@ int main(void){
     cout << "Press any key to start analysis..." << endl;
     cin.sync(); cin.get();
     auto start = chrono::high_resolution_clock::now();
-    out_file = filename + ".csv";
-    csv.open(out_file, fstream::out);
-
-    // Add column names
-    for(string s : show_firewall_policy){
-        csv << s << ",";
-    }
-    csv << endl;
 
     currentLookup CL = OUTSIDE;
 
     bool configurationMode = false;
     bool editMode = false;
     int lineAcceptedForIndex = -1;
+    bool csvOpened = false;
 
     // Read line by line
     while(!file.eof()){
@@ -177,11 +170,11 @@ int main(void){
             }
         }
 
-        // Temporary to terminate app if not policies configuration
-        if(CL != POLICIES) continue;
-
         if(configurationMode){
             if(checkForExactMatch(line, "end")){
+                csv.close();
+                cout << "CSV closed..." << endl << endl;
+                csvOpened = false;
                 CL = OUTSIDE; configurationMode = false; continue;
             }
 
@@ -203,10 +196,64 @@ int main(void){
 
                 // Place for processing properties
                 switch(CL){
+
                     case POLICIES: {
+                        if(!csvOpened){
+                            out_file = "sources_restricted/CSV_POLICIES.csv";
+                            csv.open(out_file, fstream::out);
+                            if(csv.is_open()) {
+                                csvOpened = true;
+                                cout << "CSV opened! (policies)" << endl << endl;
+                            }
+                            else {
+                                cout << "Error while opening CSV for writing - aborting...";
+                                cin.sync(); cin.get();
+                                exit(1);
+                            }
+                            // Add column names
+                            for(string s : show_firewall_policy){
+                                csv << s << ",";
+                            }
+                            csv << endl;
+                        }
                         for(int i = 0; i < lfElem; i++){
                             if(line.find(show_firewall_policy[i]) == 0){
                                 ruleProperties[i] = line.substr(show_firewall_policy[i].length());
+                                // line correct
+                                lineAcceptedForIndex = i;
+                                break;
+                            }
+                            if(lineAcceptedForIndex != -1 && line.find("set ") != 0){
+                                ruleProperties[lineAcceptedForIndex].append(line);
+                                break;
+                            } else {
+                                lineAcceptedForIndex = -1;
+                            }
+                        }
+                        continue;
+                    }
+
+                    case VIP_GROUPS: {
+                        if(!csvOpened){
+                            out_file = "sources_restricted/CSV_VIP_GROUPS.csv";
+                            csv.open(out_file, fstream::out);
+                            if(csv.is_open()) {
+                                csvOpened = true;
+                                cout << "CSV OPENED! (vip groups)" << endl << endl;
+                            } else {
+                                cout << "Error while opening CSV for writing - aborting...";
+                                cin.sync(); cin.get();
+                                exit(1);
+                            }
+                            // Add column names
+                            for(string s : show_firewall_rest){
+                                csv << s << ",";
+                            }
+                            csv << endl;
+                        }
+                        for(int i = 0; i < lfElemRest; i++){
+                            if(line.find(show_firewall_rest[i]) == 0){
+                                ruleProperties[i] = line.substr(show_firewall_rest[i].length());
                                 // line correct
                                 lineAcceptedForIndex = i;
                                 break;
@@ -232,7 +279,7 @@ int main(void){
     auto duration = chrono::duration_cast<chrono::milliseconds>(stop-start);
     cout << "Closing files..." << endl;
     file.close();
-    csv.close();
+    if(csv.is_open()) csv.close();
     printf("Converting complete (%d ms)!\n Press any key to quit...", duration);
     cin.sync(); cin.get();
 }
