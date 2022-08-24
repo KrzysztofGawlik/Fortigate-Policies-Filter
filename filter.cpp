@@ -173,7 +173,6 @@ int main(void){
         if(configurationMode){
             if(checkForExactMatch(line, "end")){
                 csv.close();
-                cout << "CSV closed..." << endl << endl;
                 csvOpened = false;
                 CL = OUTSIDE; configurationMode = false; continue;
             }
@@ -233,13 +232,22 @@ int main(void){
                         continue;
                     }
 
-                    case VIP_GROUPS: {
+                    case VIP_GROUPS:
+                    case IPV6_VIP_GROUPS:
+                    case ADDR_GROUPS:
+                    case IPV6_ADDR_GROUPS:
+                    case SERVICE_GROUPS:
+                    case SCHEDULE_GROUPS: {
                         if(!csvOpened){
-                            out_file = "sources_restricted/CSV_VIP_GROUPS.csv";
+                            if(CL == VIP_GROUPS) out_file = "sources_restricted/CSV_VIP_GROUPS.csv";
+                            if(CL == IPV6_VIP_GROUPS) out_file = "sources_restricted/CSV_IPV6_VIP_GROUPS.csv";
+                            if(CL == ADDR_GROUPS) out_file = "sources_restricted/CSV_ADDR_GROUPS.csv";
+                            if(CL == IPV6_ADDR_GROUPS) out_file = "sources_restricted/CSV_IPV6_ADDR_GROUPS.csv";
+                            if(CL == SERVICE_GROUPS) out_file = "sources_restricted/CSV_SERVICE_GROUPS.csv";
+                            if(CL == SCHEDULE_GROUPS) out_file = "sources_restricted/CSV_SCHEDULE_GROUPS.csv";
                             csv.open(out_file, fstream::out);
                             if(csv.is_open()) {
                                 csvOpened = true;
-                                cout << "CSV OPENED! (vip groups)" << endl << endl;
                             } else {
                                 cout << "Error while opening CSV for writing - aborting...";
                                 cin.sync(); cin.get();
