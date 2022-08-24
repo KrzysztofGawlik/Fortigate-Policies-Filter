@@ -128,7 +128,8 @@ int main(void){
     // Welcome screen and open file, create output file, confirm and start clock
     greeting();
     cout << "Provide filename with \"show firewall policy\" output: ";
-    cin >> filename;
+    //cin >> filename;
+    filename = "sources_restricted/total_ext";
     cout << "Trying to open \""<<filename<<".txt\"..." << endl;
     in_file = filename + ".txt";
     file.open(in_file, fstream::in);
@@ -155,6 +156,7 @@ int main(void){
 
     bool configurationMode = false;
     bool editMode = false;
+    int lineAcceptedForIndex = -1;
 
     // Read line by line
     while(!file.eof()){
@@ -175,13 +177,16 @@ int main(void){
             }
         }
 
+        // Temporary to terminate app if not policies configuration
+        if(CL != POLICIES) continue;
+
         if(configurationMode){
             if(checkForExactMatch(line, "end")){
                 CL = OUTSIDE; configurationMode = false; continue;
             }
 
             if(checkForExactMatch(line.substr(0,4), "edit")){
-                editMode = true; continue; // Continue causes to avoid taking rule number
+                editMode = true;
             }
             if(editMode){
                 if(checkForExactMatch(line, "next")){
@@ -197,15 +202,20 @@ int main(void){
                 }
 
                 // Place for processing properties
-                /*
-                    There is no code for processing multilines - needs to be added
-                */
                 switch(CL){
                     case POLICIES: {
                         for(int i = 0; i < lfElem; i++){
                             if(line.find(show_firewall_policy[i]) == 0){
                                 ruleProperties[i] = line.substr(show_firewall_policy[i].length());
+                                // line correct
+                                lineAcceptedForIndex = i;
                                 break;
+                            }
+                            if(lineAcceptedForIndex != -1 && line.find("set ") != 0){
+                                ruleProperties[lineAcceptedForIndex].append(line);
+                                break;
+                            } else {
+                                lineAcceptedForIndex = -1;
                             }
                         }
                         continue;
