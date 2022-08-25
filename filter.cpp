@@ -48,13 +48,13 @@ static inline std::string trim_copy(std::string s) {
 void greeting(void){
     cout << string(85, '*') << endl;
     cout << "Hello! Thank you for using this little program :)" << endl;
-    cout << "It converts \'show firewall [...]\' output from FortiGate firewall CLI to CSV file." << endl;
+    cout << "It converts \'show firewall [...]\' output from FortiGate firewall CLI to CSV files." << endl;
     cout << "Please put the .exe & output in .txt in the same directory. Run the app, when asked" << endl;
     cout << "for filename, provide it without extension, eg. fw_output ." << endl;
-    cout << "CSV file will be created for you!" << endl;
+    cout << "CSV files will be created for you!" << endl;
     cout << string(85, '*') << endl;
     cout << "Made by Krzysztof Gawlik -- 08/2022" << endl;
-    cout << "Version 2.0.0 (beta) - not official" << endl;
+    cout << "Version 2.0.0 - not official" << endl;
     cout << "!!! USE AT YOUR OWN RISK !!!" << endl;
     cout << string(85, '*') << endl;
 }
@@ -69,26 +69,6 @@ enum currentLookup {
     SERVICE_GROUPS,         // config firewall service group
     SCHEDULE_GROUPS,        // config firewall schedule group
     OUTSIDE                 // when none of the above
-};
-
-class Policy{
-    public:
-        unsigned int id;
-        string  name,
-                action,
-                srcInterface,
-                srcAddress,
-                dstInterface,
-                dstAddress,
-                schedule,
-                service,
-                logTraffic,
-                nat;
-};
-
-class Group{
-    public:
-        string name, details;
 };
 
 bool checkForExactMatch(string line, string confType){
@@ -128,8 +108,8 @@ int main(void){
     // Welcome screen and open file, create output file, confirm and start clock
     greeting();
     cout << "Provide filename with \"show firewall policy\" output: ";
-    //cin >> filename;
-    filename = "sources_restricted/total_ext";
+    cin >> filename;
+    //filename = "sources_restricted/total_ext";
     cout << "Trying to open \""<<filename<<".txt\"..." << endl;
     in_file = filename + ".txt";
     file.open(in_file, fstream::in);
@@ -198,11 +178,10 @@ int main(void){
 
                     case POLICIES: {
                         if(!csvOpened){
-                            out_file = "sources_restricted/CSV_POLICIES.csv";
+                            out_file = "CSV_POLICIES.csv";
                             csv.open(out_file, fstream::out);
                             if(csv.is_open()) {
                                 csvOpened = true;
-                                cout << "CSV opened! (policies)" << endl << endl;
                             }
                             else {
                                 cout << "Error while opening CSV for writing - aborting...";
@@ -239,12 +218,12 @@ int main(void){
                     case SERVICE_GROUPS:
                     case SCHEDULE_GROUPS: {
                         if(!csvOpened){
-                            if(CL == VIP_GROUPS) out_file = "sources_restricted/CSV_VIP_GROUPS.csv";
-                            if(CL == IPV6_VIP_GROUPS) out_file = "sources_restricted/CSV_IPV6_VIP_GROUPS.csv";
-                            if(CL == ADDR_GROUPS) out_file = "sources_restricted/CSV_ADDR_GROUPS.csv";
-                            if(CL == IPV6_ADDR_GROUPS) out_file = "sources_restricted/CSV_IPV6_ADDR_GROUPS.csv";
-                            if(CL == SERVICE_GROUPS) out_file = "sources_restricted/CSV_SERVICE_GROUPS.csv";
-                            if(CL == SCHEDULE_GROUPS) out_file = "sources_restricted/CSV_SCHEDULE_GROUPS.csv";
+                            if(CL == VIP_GROUPS) out_file = "CSV_VIP_GROUPS.csv";
+                            if(CL == IPV6_VIP_GROUPS) out_file = "CSV_IPV6_VIP_GROUPS.csv";
+                            if(CL == ADDR_GROUPS) out_file = "CSV_ADDR_GROUPS.csv";
+                            if(CL == IPV6_ADDR_GROUPS) out_file = "CSV_IPV6_ADDR_GROUPS.csv";
+                            if(CL == SERVICE_GROUPS) out_file = "CSV_SERVICE_GROUPS.csv";
+                            if(CL == SCHEDULE_GROUPS) out_file = "CSV_SCHEDULE_GROUPS.csv";
                             csv.open(out_file, fstream::out);
                             if(csv.is_open()) {
                                 csvOpened = true;
