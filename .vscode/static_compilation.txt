@@ -1,0 +1,1 @@
+g++ -static-libgcc -static-libstdc++ -o .vscode/filter_final filter.cpp
